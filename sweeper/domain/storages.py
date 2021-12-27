@@ -1,9 +1,9 @@
-import uuid
 from abc import ABC
 from pathlib import Path
 from typing import ClassVar, Type
 
 from sweeper.domain.actions import Action, NothingAction, TorrentAction
+from sweeper.domain.file import File
 from sweeper.infrastructure.settings.base import settings
 from sweeper.infrastructure.system_logger import logger
 
@@ -12,26 +12,25 @@ class Storage(ABC):
     storage_path: ClassVar[Path]
     action: ClassVar[Type[Action]]
 
-    def __init__(self, source_file: Path):
+    def __init__(self, source_file: File, overwrite: bool = False):
         self.source_file = source_file
+        self.overwrite = overwrite
 
     def check_storage_exists(self) -> None:
         """Проверка существования каталога продуктов и если его нет, то создать"""
         if not self.storage_path.exists():
             self.storage_path.mkdir(mode=0o777)
 
-    def prepare_target_file(self) -> Path:
+    def prepare_file(self) -> Path:
         """Подготавливаем целевой файл к переносу"""
-        dst: Path = self.storage_path / self.source_file.name
+        destination = self.storage_path / self.source_file.name
+        is_overwrite_file = self.overwrite is False
 
-        if dst.exists():
-            suffix = uuid.uuid4().hex
-            new_file_name = f"{self.source_file.stem}_{suffix}"
-            logger.info(f"Target file exists {self.source_file=} rename to {new_file_name=}")
-            new_name = self.storage_path / self.source_file.with_stem(new_file_name)
-            dst = dst.rename(new_name)
+        if destination.exists() and is_overwrite_file:
+            new_file_name = self.source_file.rename()
+            destination = self.storage_path / new_file_name
 
-        return dst
+        return destination
 
     def move(self, destination: Path) -> None:
         """
@@ -39,7 +38,7 @@ class Storage(ABC):
         Replace: если файл уже есть в целевой директории, то он его заменяет
         """
         logger.info(f"Move file {self.source_file=} to {destination=}")
-        self.source_file = self.source_file.replace(destination)
+        self.source_file = self.source_file.path.replace(destination)
         logger.info(f"New path {self.source_file}")
 
     def usecase(self) -> None:
@@ -49,9 +48,9 @@ class Storage(ABC):
         """
         self.check_storage_exists()
 
-        destination = self.prepare_target_file()
+        destination = self.prepare_file()
         self.move(destination)
-        self.action().perform()
+        self.action().perform(destination)
 
 
 class Application(Storage):

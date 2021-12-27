@@ -1,16 +1,16 @@
 from abc import ABC
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Optional, Type
 
 from sweeper.common.utils.mime_typer import MimeTyper
+from sweeper.domain.file import File
 from sweeper.domain.storage_factory.factories import StorageFactory
 from sweeper.domain.storages import Storage
 from sweeper.infrastructure.system_logger import logger
 
 
 @dataclass
-class FactoryMapper(ABC):
+class FactoryRegistry(ABC):
     _factories: list[StorageFactory] = field(init=False, default_factory=list)
     _registered: set[str] = field(init=False, default_factory=set)
 
@@ -30,7 +30,7 @@ class FactoryMapper(ABC):
 
         return klass
 
-    def find(self, source_file_path: Path) -> Optional[Storage]:
+    def find(self, source_file_path: File) -> Optional[Storage]:
         matches: list[StorageFactory] = [factory for factory in self._factories if factory.match(source_file_path)]
 
         if not matches:

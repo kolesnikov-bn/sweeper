@@ -5,10 +5,11 @@ from typing import ClassVar, Type
 from sweeper.common.enums import Priority
 from sweeper.common.types import MIME
 from sweeper.common.utils.mime_typer import MimeTyper
-from sweeper.domain.storage_factory.factory_mapper import FactoryMapper
+from sweeper.domain.file import File
+from sweeper.domain.storage_factory.factory_mapper import FactoryRegistry
 from sweeper.domain.storages import Application, Archive, Audio, Document, Image, Other, Storage, Torrent, Video
 
-factory_mapper = FactoryMapper()
+factory_registry = FactoryRegistry()
 
 
 class StorageFactory(ABC):
@@ -21,24 +22,24 @@ class StorageFactory(ABC):
         self.mime_typer = mime_typer
 
     @abstractmethod
-    def match(self, source_path: Path) -> bool:
+    def match(self, source_file: File) -> bool:
         raise NotImplementedError("Subclasses must implement")
 
-    def make_storage(self, source_path: Path) -> Storage:
-        return self.storage(source_path)
+    def make_storage(self, source_file: File) -> Storage:
+        return self.storage(source_file)
 
 
-@factory_mapper.register
+@factory_registry.register
 class TorrentStorageFactory(StorageFactory):
     priority = Priority.normal
     extensions = [".torrent"]
     storage = Torrent
 
-    def match(self, source_path: Path) -> bool:
-        return source_path.suffix.lower() in self.extensions
+    def match(self, source_file: File) -> bool:
+        return source_file.extension in self.extensions
 
 
-@factory_mapper.register
+@factory_registry.register
 class ArchiveStorageFactory(StorageFactory):
     priority = Priority.normal
     extensions = [
@@ -53,85 +54,69 @@ class ArchiveStorageFactory(StorageFactory):
     ]
     storage = Archive
 
-    def match(self, source_path: Path) -> bool:
-        return source_path.suffix.lower() in self.extensions
+    def match(self, source_file: File) -> bool:
+        return source_file.extension in self.extensions
 
 
-@factory_mapper.register
+@factory_registry.register
 class VideoStorageFactory(StorageFactory):
     priority = Priority.normal
     extensions = [".mp4", ".avi", ".wmv", ".flv", ".mpg"]
     mime_type = MIME("video")
     storage = Video
 
-    def match(self, source_path: Path) -> bool:
-        if source_path.is_dir():
-            return False
-
-        mime_type = self.mime_typer.from_file(source_path)
-        return mime_type == self.mime_type
+    def match(self, source_file: File) -> bool:
+        return source_file.mime_type == self.mime_type
 
 
-@factory_mapper.register
+@factory_registry.register
 class ImageStorageFactory(StorageFactory):
     priority = Priority.normal
     extensions = [".gif", ".jpg", ".ico", ".icns", ".png", ".tiff", ".svg"]
     mime_type = MIME("image")
     storage = Image
 
-    def match(self, source_path: Path) -> bool:
-        if source_path.is_dir():
-            return False
-
-        mime_type = self.mime_typer.from_file(source_path)
-        return mime_type == self.mime_type
+    def match(self, source_file: File) -> bool:
+        return source_file.mime_type == self.mime_type
 
 
-@factory_mapper.register
+@factory_registry.register
 class AudioStorageFactory(StorageFactory):
     priority = Priority.normal
     extensions = [".mp3", ".m4a", ".flac", ".alac"]
     mime_type = MIME("audio")
     storage = Audio
 
-    def match(self, source_path: Path) -> bool:
-        if source_path.is_dir():
-            return False
-
-        mime_type = self.mime_typer.from_file(source_path)
-        return mime_type == self.mime_type
+    def match(self, source_file: File) -> bool:
+        return source_file.mime_type == self.mime_type
 
 
-@factory_mapper.register
+@factory_registry.register
 class ApplicationStorageFactory(StorageFactory):
     priority = Priority.normal
     extensions = [".app", ".exe"]
     storage = Application
 
-    def match(self, source_path: Path) -> bool:
-        return source_path.suffix.lower() in self.extensions
+    def match(self, source_file: File) -> bool:
+        return source_file.extension in self.extensions
 
 
-@factory_mapper.register
+@factory_registry.register
 class DocumentStorageFactory(StorageFactory):
     priority = Priority.normal
     extensions = [".djvu", ".pdf", ".doc", ".xlsx", ".txt", ".epub", ".rtf", ".docx"]
     storage = Document
 
-    def match(self, source_path: Path) -> bool:
-        return source_path.suffix.lower() in self.extensions
+    def match(self, source_file: File) -> bool:
+        return source_file.extension in self.extensions
 
 
-@factory_mapper.register
+@factory_registry.register
 class OtherStorageFactory(StorageFactory):
     priority = Priority.low
     extensions = []
     mime_type = MIME("text")
     storage = Other
 
-    def match(self, source_path: Path) -> bool:
-        if source_path.is_dir():
-            return False
-
-        mime_type = self.mime_typer.from_file(source_path)
-        return mime_type == self.mime_type
+    def match(self, source_file: File) -> bool:
+        return source_file.mime_type == self.mime_type
