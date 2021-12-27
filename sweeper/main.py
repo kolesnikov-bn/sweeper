@@ -3,13 +3,12 @@ from abc import ABC, abstractmethod
 from infrastructure.settings.base import settings
 
 from sweeper.domain.file import File
-from sweeper.domain.storage_factory.factories import plant_registry
-from sweeper.domain.storage_factory.plant_registry import PlantRegistry
+from sweeper.domain.storage_factory.factories import PlantRegistry, plant_registry
 
 
 class Iteractor(ABC):
-    def __init__(self, factories_mapper: PlantRegistry):
-        self.factory_mapper = factories_mapper
+    def __init__(self, registry: PlantRegistry):
+        self.plant_registry = registry
 
     @abstractmethod
     def usecase(self) -> None:
@@ -32,9 +31,8 @@ class SweeperUsecase(Iteractor):
 
     def perform(self, files: list[File]) -> None:
         for file_element in files:
-            if (storage := self.factory_mapper.find(file_element)) is not None:
-                pass
-                # storage.perform()
+            if (storage := self.plant_registry.find(file_element)) is not None:
+                storage.usecase()
 
 
 def main() -> None:

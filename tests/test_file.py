@@ -7,7 +7,8 @@ def test_file(fixtures_path):
     png_file = fixtures_path / "heatmap.png"
     file = File(path=png_file)
 
-    assert file.name == "heatmap"
+    assert file.stem == "heatmap"
+    assert file.name == "heatmap.png"
     assert file.mime_type == "image"
     assert file.extension == ".png"
 
@@ -20,7 +21,8 @@ def test_file_uppercase(fixtures_path):
     png_file = fixtures_path / "HEATMAP_UPPERCASE.PNG"
     file = File(path=png_file)
 
-    assert file.name == "HEATMAP_UPPERCASE"
+    assert file.name == "HEATMAP_UPPERCASE.PNG"
+    assert file.stem == "HEATMAP_UPPERCASE"
     assert file.mime_type == "image"
     assert file.extension == ".png"
 
@@ -33,6 +35,7 @@ def test_file_set_folder(fixtures_path):
     file = File(path=folder)
 
     assert file.name == "fixtures"
+    assert file.stem == "fixtures"
     assert file.mime_type == UndefinedMimeType
     assert file.extension == ""
 

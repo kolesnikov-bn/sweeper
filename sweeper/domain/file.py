@@ -18,6 +18,10 @@ class File(BaseModel):
 
     @property
     def name(self) -> str:
+        return self.path.name
+
+    @property
+    def stem(self) -> str:
         return self.path.stem
 
     @property

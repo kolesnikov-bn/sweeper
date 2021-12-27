@@ -1,12 +1,56 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import ClassVar, Type
+from dataclasses import dataclass, field
+from typing import ClassVar, Optional, Type
+
+from loguru import logger
 
 from sweeper.common.enums import Priority
 from sweeper.common.types import MIME
 from sweeper.common.utils.mime_typer import MimeTyper
 from sweeper.domain.file import File
-from sweeper.domain.storage_factory.plant_registry import PlantRegistry
 from sweeper.domain.storages import Application, Archive, Audio, Document, Image, Other, Storage, Torrent, Video
+
+
+@dataclass
+class PlantRegistry(ABC):
+    _factories: list[StorageFactory] = field(init=False, default_factory=list)
+    _registered: set[str] = field(init=False, default_factory=set)
+
+    def register(self, klass: Type[StorageFactory]) -> Type[StorageFactory]:
+        """Регистрация фабрики продуктов
+
+        :param klass: фабрика создания продукта
+        """
+        if not issubclass(klass, StorageFactory):
+            raise TypeError("Можно регистрировать только субклассы от Factory")
+
+        if klass.__name__ in self._registered:
+            raise ValueError(f"Класс `{klass.__name__}` уже зарегистрирован")
+
+        self._factories.append(klass(MimeTyper()))
+        self._registered.add(klass.__name__)
+
+        return klass
+
+    def find(self, source_file_path: File) -> Optional[Storage]:
+        matches = [factory for factory in self._factories if factory.match(source_file_path)]
+
+        if not matches:
+            logger.info(f"Не удается найти фабрику для элемента: `{source_file_path}`")
+            return None
+
+        if len(matches) > 1:
+            logger.info(f"Найдено более одной фабрики!!!", matches)
+            # Если нашли более одной фабрики, то выбираем фабрику с наивысшим приоритетом.
+            matches = [max(matches, key=lambda factory: factory.priority)]
+
+        factory = matches[0]
+        logger.info(f"Найдена фабрика: `{factory.__class__.__name__}`")
+
+        return factory.make_storage(source_file_path)
+
 
 plant_registry = PlantRegistry()
 
