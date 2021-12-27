@@ -10,7 +10,7 @@ from sweeper.infrastructure.system_logger import logger
 
 
 @dataclass
-class FactoryRegistry(ABC):
+class PlantRegistry(ABC):
     _factories: list[StorageFactory] = field(init=False, default_factory=list)
     _registered: set[str] = field(init=False, default_factory=set)
 
@@ -42,7 +42,7 @@ class FactoryRegistry(ABC):
             # Если нашли более одной фабрики, то выбираем фабрику с наивысшим приоритетом.
             matches = [max(matches, key=lambda factory: factory.priority)]
 
-        product = matches[0]
-        logger.info(f"Найдена фабрика: `{product.__class__.__name__}`")
+        factory = matches[0]
+        logger.info(f"Найдена фабрика: `{factory.__class__.__name__}`")
 
-        return product.make_storage(source_file_path)
+        return factory.make_storage(source_file_path)

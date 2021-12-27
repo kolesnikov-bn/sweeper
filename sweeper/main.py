@@ -3,12 +3,12 @@ from abc import ABC, abstractmethod
 from infrastructure.settings.base import settings
 
 from sweeper.domain.file import File
-from sweeper.domain.storage_factory.factories import factory_registry
-from sweeper.domain.storage_factory.factory_mapper import FactoryRegistry
+from sweeper.domain.storage_factory.factories import plant_registry
+from sweeper.domain.storage_factory.plant_registry import PlantRegistry
 
 
 class Iteractor(ABC):
-    def __init__(self, factories_mapper: FactoryRegistry):
+    def __init__(self, factories_mapper: PlantRegistry):
         self.factory_mapper = factories_mapper
 
     @abstractmethod
@@ -38,7 +38,7 @@ class SweeperUsecase(Iteractor):
 
 
 def main() -> None:
-    SweeperUsecase(factory_registry).usecase()
+    SweeperUsecase(plant_registry).usecase()
 
 
 if __name__ == "__main__":
