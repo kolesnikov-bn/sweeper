@@ -17,5 +17,5 @@ class MimeTyper:
 
         :param stdout: Результат выподнения команды `file`
         """
-        major_type, subtype = stdout.split("/")
-        return major_type
+        major_type, subtype = stdout.split("/", maxsplit=1)
+        return MIME(major_type)
