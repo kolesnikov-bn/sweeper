@@ -6,6 +6,8 @@ authors = ["Boris <kolesnikoff.bn@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+pydantic = "^1.8.2"
+loguru = "^0.5.3"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.930"
