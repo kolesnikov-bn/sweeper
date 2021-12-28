@@ -9,7 +9,7 @@ def test_file(fixtures_path):
 
     assert file.stem == "heatmap"
     assert file.name == "heatmap.png"
-    assert file.mime_type == "image"
+    assert file.mime_type == MIME("image")
     assert file.extension == ".png"
 
 
@@ -23,7 +23,7 @@ def test_file_uppercase(fixtures_path):
 
     assert file.name == "HEATMAP_UPPERCASE.PNG"
     assert file.stem == "HEATMAP_UPPERCASE"
-    assert file.mime_type == "image"
+    assert file.mime_type == MIME("image")
     assert file.extension == ".png"
 
 

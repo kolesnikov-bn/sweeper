@@ -15,6 +15,12 @@ pytest = "^6.2.5"
 black = "^21.12b0"
 isort = "^5.10.1"
 hypothesis = "^6.32.1"
+pytest-cov = "^3.0.0"
+pytest-sugar = "^0.9.4"
+pytest-icdiff = "^0.5"
+wemake-python-styleguide = "^0.16.0"
+pre-commit = "^2.16.0"
+tox = "^3.24.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -31,3 +37,75 @@ line_length = 120
 
 [tool.black]
 line-length = 120
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    # Don't complain if non-runnable code isn't run:
+    "if TYPE_CHECKING:",
+    # Don't complain ABC method
+    "@abstractmethod",
+    "raise AssertionError",
+]
+
+[tool.coverage.run]
+omit = [
+    "sweeper/main.py",
+]
+
+
+[tool.pytest.ini_options]
+# Directories that are not visited by pytest collector:
+norecursedirs = [
+    "sweeper/infrastructure/settings",
+    "hooks",
+    "dist",
+    "build",
+    "docs",
+    ".tox",
+    ".git",
+    "__pycache__",
+]
+# Extra options:
+addopts = "--strict-markers --tb=short -rsxX -l"
+testpaths = ["tests"]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = begin,py310,end
+isolated_build = True
+skipsdist = true
+
+[testenv]
+whitelist_externals = poetry
+deps =
+    pytest
+    pytest-cov
+
+commands =
+    poetry install -v
+    poetry run pytest --strict-markers --tb=short -rsxX -l --cov=sweeper tests
+
+[testenv:begin]
+commands = poetry run coverage erase
+
+[testenv:end]
+commands =
+    poetry run coverage xml
+
+[testenv:linter]
+deps =
+    flake8
+    flake8-bugbear
+    flake8-builtins
+    flake8-comprehensions
+    flake8-string-format
+    black
+
+commands =
+    flake8 sweeper
+    black --check .
+
+"""
