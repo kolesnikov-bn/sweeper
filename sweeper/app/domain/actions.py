@@ -2,7 +2,7 @@ import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
 
-from sweeper.app.common import StatusEnum
+from sweeper.app.common.enums import StatusEnum
 from sweeper.app.domain.file import File
 from sweeper.infrastructure.settings.base import Settings
 from sweeper.infrastructure.system_logger import logger
