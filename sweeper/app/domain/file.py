@@ -35,14 +35,23 @@ class File(BaseModel):
 
         return self.mime_typer.from_file(self.path)
 
-    def rename(self, target: Optional[str] = None) -> str:
-        if target is None:
-            target = uuid.uuid4().hex
+    def rename(self, new_stem: Optional[str] = None) -> str:
+        if new_stem is None:
+            new_stem = uuid.uuid4().hex
 
-        new_name = Path(f"{target}{self.extension}")
+        new_name = Path(f"{new_stem}{self.extension}")
 
         logger.info(f"Target file exists {self.path=} rename to {new_name=}")
-        new_path = self.path.with_stem(target)
+        new_path = self.path.with_stem(new_stem)
         self.path = self.path.rename(new_path)
 
         return self.path.name
+
+    def move_to(self, destination_file_path: Path) -> None:
+        """
+        Перемещение файла в каталог конкретного продукта
+        Replace: если файл уже есть в целевой директории, то он его заменяет
+        """
+        logger.info(f"Move file {self.path=} to {destination_file_path=}")
+        self.path.replace(destination_file_path)
+        logger.info(f"New path {destination_file_path}")

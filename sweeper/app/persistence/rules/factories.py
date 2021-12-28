@@ -80,8 +80,8 @@ class StorageRule(ABC):
     def match(self, source_file: File) -> bool:
         raise NotImplementedError("Subclasses must implement")
 
-    def fetch_storage(self, source_file: File) -> Storage:
-        return self.storage(source_file, self.settings)
+    def fetch_storage(self) -> Storage:
+        return self.storage(self.settings)
 
 
 @rule_registry.register

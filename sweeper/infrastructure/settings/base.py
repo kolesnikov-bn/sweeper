@@ -2,13 +2,13 @@ from pathlib import Path
 
 from pydantic import BaseSettings
 
-ROOT_PATH = Path(__file__).parent.parent.absolute()
+ROOT_PATH = Path(__file__).parent.parent.parent.absolute()
 
 
 class Settings(BaseSettings):
     root_path: Path = ROOT_PATH
     home_dir: Path = Path.home()
-    target_dir: str = "Downloads"
+    sweeper_dir: str = "Downloads"
     application_folder: Path = Path("/Applications")
     reserved_files: list[str] = [
         "$RECYCLE.BIN",
@@ -28,7 +28,11 @@ class Settings(BaseSettings):
 
     @property
     def base_dir(self) -> Path:
-        return self.home_dir.joinpath(self.target_dir)
+        return self.home_dir.joinpath(self.sweeper_dir)
+
+    @property
+    def resources(self) -> Path:
+        return self.root_path.joinpath("resources")
 
 
 settings = Settings()
