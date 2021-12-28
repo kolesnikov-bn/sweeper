@@ -2,10 +2,9 @@ import os
 from typing import Type
 from unittest import mock
 
-from app.domain.actions import Action, NothingAction
-from app.persistence.storage_creator import ConcreateCreator
-from app.persistence.storages import Storage
-
+from sweeper.app.domain.actions import Action, NothingAction
+from sweeper.app.persistence.storage_creator import ConcreateCreator
+from sweeper.app.persistence.storages import Storage
 from sweeper.infrastructure.settings.base import Settings
 
 
