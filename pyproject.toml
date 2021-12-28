@@ -86,7 +86,7 @@ deps =
 
 commands =
     poetry install -v
-    poetry run pytest --strict-markers --tb=short -rsxX -l --cov=sweeper tests
+    poetry run pytest --strict-markers --tb=short -rsxX -l --cov=sweeper/app tests
 
 [testenv:begin]
 commands = poetry run coverage erase
@@ -105,7 +105,7 @@ deps =
     black
 
 commands =
-    flake8 sweeper
+    flake8 sweeper/app
     black --check .
 
 """

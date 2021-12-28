@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
-from sweeper.domain.file import File
+from sweeper.app.domain.file import File
+from sweeper.app.persistence.rules.factories import RuleRegistry
 from sweeper.infrastructure.settings.base import Settings
-from sweeper.persistence.rules.factories import RuleRegistry
 
 
 class Iteractor(ABC):

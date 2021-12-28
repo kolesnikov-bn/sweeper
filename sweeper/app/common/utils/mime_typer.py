@@ -1,7 +1,7 @@
 import subprocess
 from pathlib import Path
 
-from sweeper.common.types import MIME
+from sweeper.app.common.types import MIME
 
 
 class MimeTyper:

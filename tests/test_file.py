@@ -1,5 +1,5 @@
-from sweeper.common.types import MIME, UndefinedMimeType
-from sweeper.domain.file import File
+from sweeper.app.common.types import MIME, UndefinedMimeType
+from sweeper.app.domain.file import File
 from tests.utils.tools import copy_file
 
 

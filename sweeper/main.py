@@ -1,7 +1,7 @@
 from infrastructure.settings.base import Settings
 
-from sweeper.persistence.rules.factories import rule_registry
-from sweeper.usecases.sweeper_usecase import SweeperUsecase
+from sweeper.app.persistence.rules.factories import rule_registry
+from sweeper.app.usecases.sweeper_usecase import SweeperUsecase
 
 
 def main() -> None:

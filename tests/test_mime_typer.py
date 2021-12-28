@@ -1,6 +1,6 @@
 import pytest
 
-from sweeper.common.utils.mime_typer import MimeTyper
+from sweeper.app.common.utils.mime_typer import MimeTyper
 
 files_with_expected = [
     ("heatmap.png", "image"),

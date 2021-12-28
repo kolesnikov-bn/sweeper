@@ -4,8 +4,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from sweeper.common.types import MIME, UndefinedMimeType
-from sweeper.common.utils.mime_typer import MimeTyper
+from sweeper.app.common.types import MIME, UndefinedMimeType
+from sweeper.app.common.utils.mime_typer import MimeTyper
 from sweeper.infrastructure.system_logger import logger
 
 
