@@ -10,20 +10,20 @@ from sweeper.common.enums import Priority
 from sweeper.common.types import MIME
 from sweeper.common.utils.mime_typer import MimeTyper
 from sweeper.domain.file import File
-from sweeper.domain.storages import Application, Archive, Audio, Document, Image, Other, Storage, Torrent, Video
+from sweeper.persistence.storages import Application, Archive, Audio, Document, Image, Other, Storage, Torrent, Video
 
 
 @dataclass
-class PlantRegistry(ABC):
-    _factories: list[StorageFactory] = field(init=False, default_factory=list)
+class RuleRegistry(ABC):
+    _factories: list[StorageRule] = field(init=False, default_factory=list)
     _registered: set[str] = field(init=False, default_factory=set)
 
-    def register(self, klass: Type[StorageFactory]) -> Type[StorageFactory]:
+    def register(self, klass: Type[StorageRule]) -> Type[StorageRule]:
         """Регистрация фабрики продуктов
 
         :param klass: фабрика создания продукта
         """
-        if not issubclass(klass, StorageFactory):
+        if not issubclass(klass, StorageRule):
             raise TypeError("Можно регистрировать только субклассы от Factory")
 
         if klass.__name__ in self._registered:
@@ -49,13 +49,13 @@ class PlantRegistry(ABC):
         factory = matches[0]
         logger.info(f"Найдена фабрика: `{factory.__class__.__name__}`")
 
-        return factory.make_storage(source_file_path)
+        return factory.fetch_storage(source_file_path)
 
 
-plant_registry = PlantRegistry()
+rule_registry = RuleRegistry()
 
 
-class StorageFactory(ABC):
+class StorageRule(ABC):
     extensions: ClassVar[list[str]]
     mime_type: ClassVar[MIME]
     priority: ClassVar[Priority]
@@ -68,12 +68,12 @@ class StorageFactory(ABC):
     def match(self, source_file: File) -> bool:
         raise NotImplementedError("Subclasses must implement")
 
-    def make_storage(self, source_file: File) -> Storage:
+    def fetch_storage(self, source_file: File) -> Storage:
         return self.storage(source_file)
 
 
-@plant_registry.register
-class TorrentStorageFactory(StorageFactory):
+@rule_registry.register
+class TorrentRule(StorageRule):
     priority = Priority.normal
     extensions = [".torrent"]
     storage = Torrent
@@ -82,8 +82,8 @@ class TorrentStorageFactory(StorageFactory):
         return source_file.extension in self.extensions
 
 
-@plant_registry.register
-class ArchiveStorageFactory(StorageFactory):
+@rule_registry.register
+class ArchiveRule(StorageRule):
     priority = Priority.normal
     extensions = [
         ".dmg",
@@ -101,8 +101,8 @@ class ArchiveStorageFactory(StorageFactory):
         return source_file.extension in self.extensions
 
 
-@plant_registry.register
-class VideoStorageFactory(StorageFactory):
+@rule_registry.register
+class VideoRule(StorageRule):
     priority = Priority.normal
     extensions = [".mp4", ".avi", ".wmv", ".flv", ".mpg"]
     mime_type = MIME("video")
@@ -112,8 +112,8 @@ class VideoStorageFactory(StorageFactory):
         return source_file.mime_type == self.mime_type
 
 
-@plant_registry.register
-class ImageStorageFactory(StorageFactory):
+@rule_registry.register
+class ImageRule(StorageRule):
     priority = Priority.normal
     extensions = [".gif", ".jpg", ".ico", ".icns", ".png", ".tiff", ".svg"]
     mime_type = MIME("image")
@@ -123,8 +123,8 @@ class ImageStorageFactory(StorageFactory):
         return source_file.mime_type == self.mime_type
 
 
-@plant_registry.register
-class AudioStorageFactory(StorageFactory):
+@rule_registry.register
+class AudioRule(StorageRule):
     priority = Priority.normal
     extensions = [".mp3", ".m4a", ".flac", ".alac"]
     mime_type = MIME("audio")
@@ -134,8 +134,8 @@ class AudioStorageFactory(StorageFactory):
         return source_file.mime_type == self.mime_type
 
 
-@plant_registry.register
-class ApplicationStorageFactory(StorageFactory):
+@rule_registry.register
+class ApplicationRule(StorageRule):
     priority = Priority.normal
     extensions = [".app", ".exe"]
     storage = Application
@@ -144,8 +144,8 @@ class ApplicationStorageFactory(StorageFactory):
         return source_file.extension in self.extensions
 
 
-@plant_registry.register
-class DocumentStorageFactory(StorageFactory):
+@rule_registry.register
+class DocumentRule(StorageRule):
     priority = Priority.normal
     extensions = [".djvu", ".pdf", ".doc", ".xlsx", ".txt", ".epub", ".rtf", ".docx"]
     storage = Document
@@ -154,8 +154,8 @@ class DocumentStorageFactory(StorageFactory):
         return source_file.extension in self.extensions
 
 
-@plant_registry.register
-class OtherStorageFactory(StorageFactory):
+@rule_registry.register
+class OtherRule(StorageRule):
     priority = Priority.low
     extensions = []
     mime_type = MIME("text")

@@ -50,7 +50,7 @@ class Storage(ABC):
 
         destination = self.prepare_file()
         self.move(destination)
-        self.action(settings).perform(destination)
+        self.action(settings).perform_storage_usecase(destination)
 
 
 class Application(Storage):
