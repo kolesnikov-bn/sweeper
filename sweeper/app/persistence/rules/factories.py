@@ -60,7 +60,7 @@ class RuleRegistry(ABC):
         factory = matches[0]
         logger.info(f"Найдена фабрика: `{factory.__class__.__name__}`")
 
-        return factory.fetch_storage(source_file_path)
+        return factory.fetch_storage()
 
 
 rule_registry = RuleRegistry()

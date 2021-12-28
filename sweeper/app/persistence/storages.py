@@ -21,8 +21,8 @@ class Storage(ABC):
         return self.settings.base_dir / self.storage_name
 
     @property
-    def icon_path(self) -> Path:
-        return self.settings.resources / self.icon
+    def template_path(self) -> Path:
+        return self.settings.resources / self.storage_name
 
     def check_file_exists(self, source_file: File) -> bool:
         """Проверяем наличие файла в хранилище"""
