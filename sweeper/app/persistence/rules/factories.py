@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import ClassVar, Optional, Type
 
+from infrastructure.settings.base import Settings
 from loguru import logger
 
 from sweeper.app.common.enums import Priority
@@ -39,7 +40,7 @@ class RuleRegistry(ABC):
         if klass.__name__ in self._registered:
             raise ValueError(f"Класс `{klass.__name__}` уже зарегистрирован")
 
-        self._factories.append(klass(MimeTyper()))
+        self._factories.append(klass(MimeTyper(), Settings()))
         self._registered.add(klass.__name__)
 
         return klass
@@ -71,15 +72,16 @@ class StorageRule(ABC):
     priority: ClassVar[Priority]
     storage: ClassVar[Type[Storage]]
 
-    def __init__(self, mime_typer: MimeTyper):
+    def __init__(self, mime_typer: MimeTyper, settings: Settings):
         self.mime_typer = mime_typer
+        self.settings = settings
 
     @abstractmethod
     def match(self, source_file: File) -> bool:
         raise NotImplementedError("Subclasses must implement")
 
     def fetch_storage(self, source_file: File) -> Storage:
-        return self.storage(source_file)
+        return self.storage(source_file, self.settings)
 
 
 @rule_registry.register
