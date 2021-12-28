@@ -4,7 +4,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import ClassVar, Optional, Type
 
-from infrastructure.settings.base import Settings
 from loguru import logger
 
 from sweeper.app.common.enums import Priority
@@ -22,6 +21,7 @@ from sweeper.app.persistence.storages import (
     Torrent,
     Video,
 )
+from sweeper.infrastructure.settings.base import Settings
 
 
 @dataclass

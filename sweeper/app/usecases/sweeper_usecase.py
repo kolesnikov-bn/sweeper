@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 
-from app.persistence.storage_creator import StorageCreator
-
 from sweeper.app.domain.file import File
 from sweeper.app.persistence.rules.factories import RuleRegistry
+from sweeper.app.persistence.storage_creator import StorageCreator
 from sweeper.infrastructure.settings.base import Settings
 
 
