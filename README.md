@@ -7,6 +7,11 @@
 
 ## Запуск и настройка
 
+## Build
+```shell
+pyinstaller sweeper/main.py --onefile --windowed
+```
+
 ### Pre-commit hooks
 Проверка кода на соответствие определенным стандартам.
 Для этого используем утилиту [pre-commit](https://pre-commit.com),
