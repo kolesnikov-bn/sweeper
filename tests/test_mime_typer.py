@@ -12,6 +12,7 @@ files_with_expected = [
     ("sorting_test.dmg", "application"),
     ("test.mp3", "audio"),
     ("test.mov", "video"),
+    ("layout.bin", "application"),
 ]
 
 raw_mimetypes = [
@@ -27,6 +28,11 @@ raw_mimetypes = [
 ]
 
 
+incorrect_files_with_expected = [
+    ("file_without_ext", "undefined"),
+]
+
+
 @pytest.mark.parametrize("file,expected", files_with_expected)
 def test_from_file(file, expected, fixtures_path):
     png_file = fixtures_path / file
@@ -38,5 +44,13 @@ def test_from_file(file, expected, fixtures_path):
 @pytest.mark.parametrize("mimetype,expected", raw_mimetypes)
 def test__get_major_mimetype(mimetype, expected):
     result = MimeTyper()._get_major_mimetype(mimetype)
+
+    assert result == expected
+
+
+@pytest.mark.parametrize("file,expected", incorrect_files_with_expected)
+def test_from_incorrect_file(file, expected, fixtures_path):
+    png_file = fixtures_path / file
+    result = MimeTyper().from_file(png_file)
 
     assert result == expected

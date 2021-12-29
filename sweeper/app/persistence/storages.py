@@ -21,8 +21,8 @@ class Storage(ABC):
         return self.settings.base_dir / self.storage_name
 
     @property
-    def template_path(self) -> Path:
-        return self.settings.resources / self.storage_name
+    def icon_path(self) -> Path:
+        return self.settings.resources / self.icon
 
     def check_file_exists(self, source_file: File) -> bool:
         """Проверяем наличие файла в хранилище"""
@@ -38,46 +38,46 @@ class Storage(ABC):
 class Application(Storage):
     storage_name: str = "1-Applications"
     action: Type[Action] = NothingAction
-    icon: str = "blue.rsrc"
+    icon: str = "blue.png"
 
 
 class Archive(Storage):
     storage_name: str = "2-Archives"
     action: Type[Action] = NothingAction
-    icon: str = "cyan.rsrc"
+    icon: str = "cyan.png"
 
 
 class Audio(Storage):
     storage_name: str = "3-Audios"
     action: Type[Action] = NothingAction
-    icon: str = "purple.rsrc"
+    icon: str = "purple.png"
 
 
 class Torrent(Storage):
     storage_name: str = "4-Torrents"
     action: Type[Action] = TorrentAction
-    icon: str = "green.rsrc"
+    icon: str = "green.png"
 
 
 class Video(Storage):
     storage_name: str = "5-Videos"
     action: Type[Action] = NothingAction
-    icon: str = "orange.rsrc"
+    icon: str = "orange.png"
 
 
 class Image(Storage):
     storage_name: str = "6-Images"
     action: Type[Action] = NothingAction
-    icon: str = "yellow.rsrc"
+    icon: str = "yellow.png"
 
 
 class Document(Storage):
     storage_name: str = "7-Docs"
     action: Type[Action] = NothingAction
-    icon: str = "red.rsrc"
+    icon: str = "red.png"
 
 
 class Other(Storage):
     storage_name: str = "8-Others"
     action: Type[Action] = NothingAction
-    icon: str = "grey.rsrc"
+    icon: str = "black.png"

@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-import shutil
-import subprocess
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
+import Cocoa
+
+from sweeper.infrastructure.system_logger import logger
+
 if TYPE_CHECKING:
-    from app.persistence.storages import Storage
+    from sweeper.app.persistence.storages import Storage
 
 
 class StorageCreator(ABC):
@@ -22,21 +24,14 @@ class ConcreateCreator(StorageCreator):
         if not storage.storage_path.exists():
             self.create(storage)
 
-        #     try:
-        #         self.render(storage)
-        #     except Exception:
-        #         self.create(storage)
+            try:
+                self.set_icon(storage)
+            except Exception as ex:
+                logger.error(ex)
 
     def create(self, storage: Storage) -> None:
         storage.storage_path.mkdir(mode=self.create_mode)
 
-    def render(self, storage: Storage):
-        shutil.copytree(storage.template_path, storage.storage_path, copy_function=shutil.copy)
-
-        setfile_c_command = f"/usr/bin/SetFile -a C {storage.storage_path}"
-        setfile_c_process = subprocess.Popen(setfile_c_command.split(), stdout=subprocess.PIPE)
-        output, error = setfile_c_process.communicate()
-
-        setfile_v_command = f"/usr/bin/SetFile -a V {storage.storage_path}/Icon\r"
-        setfile_v_process = subprocess.Popen(setfile_v_command.split(), stdout=subprocess.PIPE)
-        output, error = setfile_v_process.communicate()
+    def set_icon(self, storage: Storage) -> None:
+        icon_image = Cocoa.NSImage.alloc().initWithContentsOfFile_(storage.icon_path.as_posix())
+        Cocoa.NSWorkspace.sharedWorkspace().setIcon_forFile_options_(icon_image, storage.storage_path.as_posix(), 0)

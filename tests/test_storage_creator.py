@@ -9,9 +9,9 @@ from sweeper.infrastructure.settings.base import Settings
 
 
 class TestStorage(Storage):
-    storage_name: str = "1-Applications"
+    storage_name: str = "29-TestStorage"
     action: Type[Action] = NothingAction
-    icon: str = "blue.rsrc"
+    icon: str = "blue.png"
 
 
 def test_create(temp_dir, temp_file):
