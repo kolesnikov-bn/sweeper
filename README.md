@@ -9,7 +9,7 @@
 
 ## Build
 ```shell
-pyinstaller sweeper/main.py --onefile --windowed
+pyinstaller sweeper/main.py --onefile --windowed -n sweeper --add-data 'sweeper/resources/*:sweeper/resources'
 ```
 
 ### Pre-commit hooks

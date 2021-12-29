@@ -18,7 +18,7 @@ def test_create(temp_dir, temp_file):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
         creator = ConcreateCreator()
         storage = TestStorage(Settings())
-        creator.create(storage)
+        creator.create_storage(storage)
 
         assert storage.storage_path.exists()
 
