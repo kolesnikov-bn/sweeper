@@ -25,7 +25,7 @@ class SweeperUsecase(Iteractor):
             if (storage := self.rule_registry.find(file)) is not None:
                 self.storage_creator.prepare_storage(storage)
 
-                if storage.check_file_exists(file) and not storage.is_overwrite:
+                if storage.is_file_exists(file) and not storage.is_overwrite:
                     file.rename()
 
                 file.move_to(storage.make_path(file))

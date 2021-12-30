@@ -24,11 +24,9 @@ class Storage(ABC):
     def icon_path(self) -> Path:
         return self.settings.resources / self.icon
 
-    def check_file_exists(self, source_file: File) -> bool:
+    def is_file_exists(self, source_file: File) -> bool:
         """Проверяем наличие файла в хранилище"""
-        storage_file = self.storage_path / source_file.name
-
-        return storage_file.exists()
+        return self.make_path(source_file).exists()
 
     def make_path(self, source_file: File) -> Path:
         """Создание нового пути от storage до нового файла"""

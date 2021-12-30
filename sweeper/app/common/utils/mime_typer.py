@@ -1,4 +1,5 @@
 import mimetypes
+import subprocess
 from pathlib import Path
 
 from sweeper.app.common.types import MIME, UndefinedMimeType
@@ -7,7 +8,10 @@ from sweeper.infrastructure.system_logger import logger
 
 class MimeTyper:
     def from_file(self, source_file_path: Path) -> MIME:
-        mime_type, _ = mimetypes.guess_type(source_file_path.as_posix())
+        # mime_type, _ = mimetypes.guess_type(source_file_path.as_posix())
+        mime_type = subprocess.run(
+            ["file", "-b", "--mime-type", source_file_path.as_posix()], capture_output=True
+        ).stdout.decode()
         major_mime = UndefinedMimeType
 
         if mime_type:

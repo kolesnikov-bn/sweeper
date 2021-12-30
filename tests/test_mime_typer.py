@@ -7,12 +7,13 @@ files_with_expected = [
     ("Keyboard_Configurator.jpg", "image"),
     ("Keyboard_Configurator.pdf", "application"),
     ("TestEmpty.txt", "text"),
-    ("TestEmptyFile.rtf", "application"),
+    ("TestEmptyFile.rtf", "text"),
     ("heatmap.png.zip", "application"),
     ("sorting_test.dmg", "application"),
     ("test.mp3", "audio"),
     ("test.mov", "video"),
     ("layout.bin", "application"),
+    ("file_without_ext", "application"),
 ]
 
 raw_mimetypes = [
@@ -29,7 +30,7 @@ raw_mimetypes = [
 
 
 incorrect_files_with_expected = [
-    ("file_without_ext", "undefined"),
+    ("loyout.bin", "cannot open `"),
 ]
 
 
