@@ -44,7 +44,7 @@ class Application(Storage):
 class Archive(Storage):
     storage_name: str = "2-Archives"
     action: Type[Action] = NothingAction
-    icon: str = "cyan.png"
+    icon: str = "pink.png"
 
 
 class Audio(Storage):
