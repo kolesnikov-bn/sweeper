@@ -4,9 +4,9 @@ from unittest import mock
 
 import pytest
 
-from sweeper.app.domain.actions import Action, NothingAction
+from sweeper.app.domain.storage import Storage
+from sweeper.app.persistence.rules.actions import Action, NothingAction
 from sweeper.app.persistence.storage_creator import ConcreateCreator
-from sweeper.app.persistence.storages import Storage
 from sweeper.infrastructure.settings.base import Settings
 from tests.utils.tools import copy_file
 

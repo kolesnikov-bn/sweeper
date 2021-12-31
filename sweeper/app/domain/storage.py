@@ -2,8 +2,8 @@ from abc import ABC
 from pathlib import Path
 from typing import ClassVar, Type
 
-from sweeper.app.domain.actions import Action, NothingAction, TorrentAction
 from sweeper.app.domain.file import File
+from sweeper.app.persistence.rules.actions import Action, NothingAction, TorrentAction
 from sweeper.infrastructure.settings.base import Settings
 
 

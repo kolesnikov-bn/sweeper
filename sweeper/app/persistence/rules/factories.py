@@ -10,17 +10,7 @@ from sweeper.app.common.enums import Priority
 from sweeper.app.common.types import MIME
 from sweeper.app.common.utils.mime_typer import MimeTyper
 from sweeper.app.domain.file import File
-from sweeper.app.persistence.storages import (
-    Application,
-    Archive,
-    Audio,
-    Document,
-    Image,
-    Other,
-    Storage,
-    Torrent,
-    Video,
-)
+from sweeper.app.domain.storage import Application, Archive, Audio, Document, Image, Other, Storage, Torrent, Video
 from sweeper.infrastructure.settings.base import Settings
 
 

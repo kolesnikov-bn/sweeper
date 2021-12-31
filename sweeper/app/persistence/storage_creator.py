@@ -8,7 +8,7 @@ import Cocoa
 from sweeper.infrastructure.system_logger import logger
 
 if TYPE_CHECKING:
-    from sweeper.app.persistence.storages import Storage
+    from sweeper.app.domain.storage import Storage
 
 
 class StorageCreator(ABC):
