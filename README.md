@@ -12,6 +12,18 @@
 pyinstaller sweeper/main.py --onefile --windowed -n sweeper --add-data 'sweeper/resources/*:sweeper/resources'
 ```
 
+## Make Action
+- Для создания нового действия необходимо открыть `Automator`.
+- Выбрать `Folder Action`
+- Выбрать целевой каталог, например `Downloads`
+- Вставить код для запуска скрипта
+
+```shell
+cd ~/sweeper
+
+poetry run sweep
+```
+
 ### Pre-commit hooks
 Проверка кода на соответствие определенным стандартам.
 Для этого используем утилиту [pre-commit](https://pre-commit.com),
