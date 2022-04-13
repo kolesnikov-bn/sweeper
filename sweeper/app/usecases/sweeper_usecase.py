@@ -28,7 +28,7 @@ class SweeperUsecase(Iteractor):
                 if directory.has_file(file) and not directory.is_overwrite:
                     file.rename()
 
-                file.move_to(directory.make_path(file))
+                file.move_to(directory.make_new_path(file))
                 directory.action(self.settings).perform(file)
 
     def collect_files(self) -> list[File]:

@@ -26,9 +26,9 @@ class AbstractDirectory(ABC):
 
     def has_file(self, source_file: File) -> bool:
         """Проверяем наличие файла в хранилище"""
-        return self.make_path(source_file).exists()
+        return self.make_new_path(source_file).exists()
 
-    def make_path(self, source_file: File) -> Path:
+    def make_new_path(self, source_file: File) -> Path:
         """Создание нового пути от storage до нового файла"""
         return self.path / source_file.name
 

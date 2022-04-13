@@ -100,6 +100,6 @@ def test_make_path(temp_dir, temp_file):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
         storage = TestDirectory(Settings())
 
-    file_path = storage.make_path(temp_file)
+    file_path = storage.make_new_path(temp_file)
 
     assert file_path == storage.path / temp_file.name
