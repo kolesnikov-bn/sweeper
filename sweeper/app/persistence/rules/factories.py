@@ -10,7 +10,7 @@ from sweeper.app.common.enums import Priority
 from sweeper.app.common.types import MIME
 from sweeper.app.common.utils.mime_typer import MimeTyper
 from sweeper.app.domain.file import File
-from sweeper.app.domain.storage import Application, Archive, Audio, Document, Image, Other, Storage, Torrent, Video
+from sweeper.app.domain.directories import Application, Archive, Audio, Document, Image, Other, AbstractDirectory, Torrent, Video
 from sweeper.infrastructure.settings.base import Settings
 
 
@@ -35,7 +35,7 @@ class RuleRegistry(ABC):
 
         return klass
 
-    def find(self, source_file_path: File) -> Optional[Storage]:
+    def find(self, source_file_path: File) -> Optional[AbstractDirectory]:
         matches = [factory for factory in self._factories if factory.match(source_file_path)]
 
         if not matches:
@@ -60,7 +60,7 @@ class StorageRule(ABC):
     extensions: ClassVar[list[str]]
     mime_type: ClassVar[MIME]
     priority: ClassVar[Priority]
-    storage: ClassVar[Type[Storage]]
+    storage: ClassVar[Type[AbstractDirectory]]
 
     def __init__(self, mime_typer: MimeTyper, settings: Settings):
         self.mime_typer = mime_typer
@@ -70,7 +70,7 @@ class StorageRule(ABC):
     def match(self, source_file: File) -> bool:
         raise NotImplementedError("Subclasses must implement")
 
-    def fetch_storage(self) -> Storage:
+    def fetch_storage(self) -> AbstractDirectory:
         return self.storage(self.settings)
 
 

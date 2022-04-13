@@ -7,7 +7,7 @@ from sweeper.app.persistence.rules.actions import Action, NothingAction, Torrent
 from sweeper.infrastructure.settings.base import Settings
 
 
-class Storage(ABC):
+class AbstractDirectory(ABC):
     storage_name: ClassVar[str]
     icon: ClassVar[str]
     action: ClassVar[Type[Action]]
@@ -17,7 +17,7 @@ class Storage(ABC):
         self.settings = settings
 
     @property
-    def storage_path(self) -> Path:
+    def path(self) -> Path:
         return self.settings.base_dir / self.storage_name
 
     @property
@@ -30,52 +30,52 @@ class Storage(ABC):
 
     def make_path(self, source_file: File) -> Path:
         """Создание нового пути от storage до нового файла"""
-        return self.storage_path / source_file.name
+        return self.path / source_file.name
 
 
-class Application(Storage):
+class Application(AbstractDirectory):
     storage_name: str = "1-Applications"
     action: Type[Action] = NothingAction
     icon: str = "blue.png"
 
 
-class Archive(Storage):
+class Archive(AbstractDirectory):
     storage_name: str = "2-Archives"
     action: Type[Action] = NothingAction
     icon: str = "pink.png"
 
 
-class Audio(Storage):
+class Audio(AbstractDirectory):
     storage_name: str = "3-Audios"
     action: Type[Action] = NothingAction
     icon: str = "purple.png"
 
 
-class Torrent(Storage):
+class Torrent(AbstractDirectory):
     storage_name: str = "4-Torrents"
     action: Type[Action] = TorrentAction
     icon: str = "green.png"
 
 
-class Video(Storage):
+class Video(AbstractDirectory):
     storage_name: str = "5-Videos"
     action: Type[Action] = NothingAction
     icon: str = "orange.png"
 
 
-class Image(Storage):
+class Image(AbstractDirectory):
     storage_name: str = "6-Images"
     action: Type[Action] = NothingAction
     icon: str = "yellow.png"
 
 
-class Document(Storage):
+class Document(AbstractDirectory):
     storage_name: str = "7-Docs"
     action: Type[Action] = NothingAction
     icon: str = "red.png"
 
 
-class Other(Storage):
+class Other(AbstractDirectory):
     storage_name: str = "8-Others"
     action: Type[Action] = NothingAction
     icon: str = "black.png"

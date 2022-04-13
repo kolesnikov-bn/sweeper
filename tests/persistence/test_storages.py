@@ -4,15 +4,15 @@ from unittest import mock
 
 import pytest
 
-from sweeper.app.domain.storage import Storage
+from sweeper.app.domain.directories import AbstractDirectory
 from sweeper.app.persistence.rules.actions import Action, NothingAction
 from sweeper.app.persistence.storage_creator import ConcreateCreator
 from sweeper.infrastructure.settings.base import Settings
 from tests.utils.tools import copy_file
 
 
-class TestStorage(Storage):
-    storage_name: str = "29-TestStorage"
+class TestDirectory(AbstractDirectory):
+    storage_name: str = "29-TestDirectory"
     action: Type[Action] = NothingAction
     icon: str = "blue.png"
 
@@ -20,27 +20,27 @@ class TestStorage(Storage):
 def test_create(temp_dir):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
         creator = ConcreateCreator()
-        storage = TestStorage(Settings())
+        storage = TestDirectory(Settings())
         creator.create_storage(storage)
 
-        assert storage.storage_path.exists()
+        assert storage.path.exists()
 
 
 def test_setup_icon_folder(temp_dir):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
         creator = ConcreateCreator()
-        storage = TestStorage(Settings())
+        storage = TestDirectory(Settings())
         creator.create_storage(storage)
         creator.setup_icon_folder(storage)
 
-        folder_icon = storage.storage_path / "Icon\r"
+        folder_icon = storage.path / "Icon\r"
         assert folder_icon.exists()
 
 
 def test_setup_icon_folder_incompleted_set(temp_dir):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
         creator = ConcreateCreator()
-        storage = TestStorage(Settings())
+        storage = TestDirectory(Settings())
         storage.icon = 1
         creator.create_storage(storage)
         with pytest.raises(TypeError):
@@ -50,19 +50,19 @@ def test_setup_icon_folder_incompleted_set(temp_dir):
 def test_check_storage_exists(temp_dir):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
         creator = ConcreateCreator()
-        storage = TestStorage(Settings())
+        storage = TestDirectory(Settings())
         creator.prepare_storage(storage)
 
-        assert storage.storage_path.exists()
+        assert storage.path.exists()
 
-        folder_icon = storage.storage_path / "Icon\r"
+        folder_icon = storage.path / "Icon\r"
         assert folder_icon.exists()
 
 
 def test_storage_path(temp_dir):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
-        storage = TestStorage(Settings())
-        storage_path = storage.storage_path
+        storage = TestDirectory(Settings())
+        storage_path = storage.path
 
     expected = temp_dir / storage.storage_name
 
@@ -73,7 +73,7 @@ def test_icon_path(temp_dir):
 
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
         settings = Settings()
-        storage = TestStorage(settings)
+        storage = TestDirectory(settings)
         icon_path = storage.icon_path
 
     expected = settings.resources / storage.icon
@@ -85,21 +85,21 @@ def test_check_file_exists(temp_dir, temp_file):
     creator = ConcreateCreator()
 
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
-        storage = TestStorage(Settings())
+        storage = TestDirectory(Settings())
         creator.create_storage(storage)
 
     is_file_exists = storage.is_file_exists(temp_file)
     assert is_file_exists is False
 
-    copy_file(temp_file.path, storage.storage_path / temp_file.name)
+    copy_file(temp_file.path, storage.path / temp_file.name)
     is_file_exists = storage.is_file_exists(temp_file)
     assert is_file_exists
 
 
 def test_make_path(temp_dir, temp_file):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
-        storage = TestStorage(Settings())
+        storage = TestDirectory(Settings())
 
     file_path = storage.make_path(temp_file)
 
-    assert file_path == storage.storage_path / temp_file.name
+    assert file_path == storage.path / temp_file.name
