@@ -5,7 +5,7 @@ from sweeper.infrastructure.settings.base import Settings
 
 
 def main() -> None:
-    SweeperUsecase(rule_registry, Settings(), ConcreateCreator()).usecase()
+    SweeperUsecase(rule_registry, Settings(), ConcreateCreator()).allocate()
 
 
 if __name__ == "__main__":

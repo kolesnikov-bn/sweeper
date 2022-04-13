@@ -88,11 +88,11 @@ def test_check_file_exists(temp_dir, temp_file):
         storage = TestDirectory(Settings())
         creator.create_storage(storage)
 
-    is_file_exists = storage.is_file_exists(temp_file)
+    is_file_exists = storage.has_file(temp_file)
     assert is_file_exists is False
 
     copy_file(temp_file.path, storage.path / temp_file.name)
-    is_file_exists = storage.is_file_exists(temp_file)
+    is_file_exists = storage.has_file(temp_file)
     assert is_file_exists
 
 

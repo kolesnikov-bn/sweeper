@@ -24,7 +24,7 @@ class AbstractDirectory(ABC):
     def icon_path(self) -> Path:
         return self.settings.resources / self.icon
 
-    def is_file_exists(self, source_file: File) -> bool:
+    def has_file(self, source_file: File) -> bool:
         """Проверяем наличие файла в хранилище"""
         return self.make_path(source_file).exists()
 

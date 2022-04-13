@@ -10,26 +10,26 @@ class Iteractor(ABC):
     def __init__(self, registry: RuleRegistry, settings: Settings, creator: StorageCreator):
         self.rule_registry = registry
         self.settings = settings
-        self.storage_creator = creator
+        self.directory_creator = creator
 
     @abstractmethod
-    def usecase(self) -> None:
+    def allocate(self) -> None:
         raise NotImplementedError
 
 
 class SweeperUsecase(Iteractor):
-    def usecase(self) -> None:
+    def allocate(self) -> None:
         files = self.collect_files()
 
         for file in files:
-            if (storage := self.rule_registry.find(file)) is not None:
-                self.storage_creator.prepare_storage(storage)
+            if (directory := self.rule_registry.find(file)) is not None:
+                self.directory_creator.prepare_storage(directory)
 
-                if storage.is_file_exists(file) and not storage.is_overwrite:
+                if directory.has_file(file) and not directory.is_overwrite:
                     file.rename()
 
-                file.move_to(storage.make_path(file))
-                storage.action(self.settings).perform(file)
+                file.move_to(directory.make_path(file))
+                directory.action(self.settings).perform(file)
 
     def collect_files(self) -> list[File]:
         files: list[File] = []
