@@ -57,10 +57,10 @@ rule_registry = RuleRegistry()
 
 
 class StorageRule(ABC):
-    extensions: ClassVar[list[str]]
-    mime_type: ClassVar[MIME]
-    priority: ClassVar[Priority]
-    storage: ClassVar[Type[AbstractDirectory]]
+    extensions: list[str]
+    mime_type: MIME
+    priority: Priority
+    storage: Type[AbstractDirectory]
 
     def __init__(self, mime_typer: MimeTyper, settings: Settings):
         self.mime_typer = mime_typer
@@ -159,7 +159,7 @@ class DocumentRule(StorageRule):
 @rule_registry.register
 class OtherRule(StorageRule):
     priority = Priority.low
-    extensions = []
+    extensions: list[str] = []
     mime_type = MIME("text")
     storage = Other
 

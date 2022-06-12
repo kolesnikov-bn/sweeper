@@ -19,7 +19,7 @@ class StorageCreator(ABC):
         raise NotImplementedError
 
 
-class ConcreateCreator(StorageCreator):
+class DirCreator(StorageCreator):
     def prepare_storage(self, storage: AbstractDirectory) -> None:
         if not storage.path.exists():
             self.create_storage(storage)

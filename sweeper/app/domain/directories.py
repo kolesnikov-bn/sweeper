@@ -1,6 +1,6 @@
 from abc import ABC
 from pathlib import Path
-from typing import ClassVar, Type
+from typing import Type
 
 from sweeper.app.domain.file import File
 from sweeper.app.persistence.rules.actions import Action, NothingAction, TorrentAction
@@ -8,9 +8,9 @@ from sweeper.infrastructure.settings.base import Settings
 
 
 class AbstractDirectory(ABC):
-    storage_name: ClassVar[str]
-    icon: ClassVar[str]
-    action: ClassVar[Type[Action]]
+    storage_name: str
+    icon: str
+    action: Type[Action]
 
     def __init__(self, settings: Settings, is_overwrite: bool = False):
         self.is_overwrite = is_overwrite

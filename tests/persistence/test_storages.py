@@ -6,7 +6,7 @@ import pytest
 
 from sweeper.app.domain.directories import AbstractDirectory
 from sweeper.app.persistence.rules.actions import Action, NothingAction
-from sweeper.app.persistence.storage_creator import ConcreateCreator
+from sweeper.app.persistence.storage_creator import DirCreator
 from sweeper.infrastructure.settings.base import Settings
 from tests.utils.tools import copy_file
 
@@ -19,7 +19,7 @@ class TestDirectory(AbstractDirectory):
 
 def test_create(temp_dir):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
-        creator = ConcreateCreator()
+        creator = DirCreator()
         storage = TestDirectory(Settings())
         creator.create_storage(storage)
 
@@ -28,7 +28,7 @@ def test_create(temp_dir):
 
 def test_setup_icon_folder(temp_dir):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
-        creator = ConcreateCreator()
+        creator = DirCreator()
         storage = TestDirectory(Settings())
         creator.create_storage(storage)
         creator.setup_icon_folder(storage)
@@ -39,7 +39,7 @@ def test_setup_icon_folder(temp_dir):
 
 def test_setup_icon_folder_incompleted_set(temp_dir):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
-        creator = ConcreateCreator()
+        creator = DirCreator()
         storage = TestDirectory(Settings())
         storage.icon = 1
         creator.create_storage(storage)
@@ -49,7 +49,7 @@ def test_setup_icon_folder_incompleted_set(temp_dir):
 
 def test_check_storage_exists(temp_dir):
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
-        creator = ConcreateCreator()
+        creator = DirCreator()
         storage = TestDirectory(Settings())
         creator.prepare_storage(storage)
 
@@ -82,7 +82,7 @@ def test_icon_path(temp_dir):
 
 
 def test_check_file_exists(temp_dir, temp_file):
-    creator = ConcreateCreator()
+    creator = DirCreator()
 
     with mock.patch.dict(os.environ, {"SWEEPER_DIR": str(temp_dir)}):
         storage = TestDirectory(Settings())
