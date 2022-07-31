@@ -139,7 +139,7 @@ class AudioRule(StorageRule):
 @rule_registry.register
 class ApplicationRule(StorageRule):
     priority = Priority.normal
-    extensions = [".app", ".exe"]
+    extensions = [".app", ".exe", ".pkg"]
     storage = Application
 
     def match(self, source_file: File) -> bool:
